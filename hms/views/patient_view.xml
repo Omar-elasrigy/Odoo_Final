@@ -1,0 +1,111 @@
+<odoo>
+    <record id="patient_tree_view" model="ir.ui.view">
+        <field name="name">patient.tree.view</field>
+        <field name="model">hms.patient</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="first_name"/>
+                <field name="last_name"/>
+                <field name="birth_date"/>
+                <field name="cr_ratio"/>
+                <field name="blood_type"/>
+                <field name="pcr"/>
+                <field name="image"/>
+                <field name="address"/>
+                <field name="age"/>
+                <field name="department_id"/>
+                <field name="department_capacity" string= "Department Capacity" />
+                <field name="doctor_id"/>
+                <field name="email"/>
+
+             </tree>
+        </field>
+    </record>
+
+    <record id="patient_form_view" model="ir.ui.view">
+        <field name="name">patient.form.view</field>
+        <field name="model">hms.patient</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"/>
+                     <button name="action_undetermined"
+                            type="object"
+                            string="Undetermined"
+                            class="btn-secondary"
+                            invisible="state != 'Serious'"/>
+                    <button name="action_good"
+                            type="object"
+                            string="Good"
+                            class="btn-secondary"
+                            invisible="state != 'Undetermined'"/>
+                    <button name="action_fair"
+                            type="object"
+                            string="Fair"
+                            class="btn-secondary"
+                            invisible="state != 'Good'"/>
+                    <button name="action_serious"
+                            type="object"
+                            string="Serious"
+                            class="btn-secondary"
+                            invisible="state != 'Fair'"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="first_name"/>
+                            <field name="last_name"/>
+                            <field name="email"/>
+                            <field name="birth_date"/>
+                            <field name="history" invisible="50 > age"/>
+                            <field name="cr_ratio"/>
+                            <field name="department_id"/>
+                            <field name="department_capacity" string= "Department Capacity" />
+                        </group>
+                        <group>
+                            <field name="image" widget="image" options="{'size':[150,150]}"/>
+                            <field name="doctor_id" groups="hms.hms_manager_group"/>
+                            <field name="blood_type"/>
+                            <field name="pcr"/>
+                            <field name="address"/>
+                            <field name="age"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="logs" >
+                            <field name="patient_log_ids" >
+                                <tree create="0">
+                                    <field name="created_by"/>
+                                    <field name="description"/>
+                                    <field name="date"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="patient_search_view" model="ir.ui.view">
+        <field name="name">patient.search.view</field>
+        <field name="model">hms.patient</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="first_name"/>
+                <field name="last_name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="patient_action" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">hms.patient</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menuitem_patient"
+              name="All Patients"
+              parent="menu_root_patient"
+              action="patient_action"/>
+</odoo>
